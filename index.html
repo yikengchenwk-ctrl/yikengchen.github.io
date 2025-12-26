@@ -11,9 +11,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Lucide Icons CDN -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@0.263.1/dist/umd/lucide.min.js"></script>
     
-    <!-- Google Fonts (Optional enhancement) -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Inter:wght@200;300;400;500;600&family=Noto+Serif+SC:wght@300;500;700&display=swap" rel="stylesheet">
@@ -23,17 +23,15 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        // 强大的字体回退栈，确保中文绝对能显示
-                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
-                        serif: ['Noto Serif SC', 'Songti SC', 'SimSun', 'Times New Roman', 'Times', 'serif'],
+                        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                        serif: ['Noto Serif SC', 'Georgia', 'Cambria', 'Times New Roman', 'serif'],
                         display: ['Cinzel', 'Trajan Pro', 'serif'],
                     },
                     colors: {
-                        'void-black': '#0a0505',
+                        'void-black': '#050505',
                         'starlight': '#f4f4f5',
                         'mist-gray': '#a1a1aa',
                         'subtle-gray': '#525252',
-                        'rose-gold': '#b76e79', 
                     },
                     animation: {
                         'fade-in': 'fadeIn 1s ease-out forwards',
@@ -55,80 +53,49 @@
     </script>
     <style>
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0a0505; }
-        ::-webkit-scrollbar-thumb { background: #b76e79; border-radius: 3px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
         
         body { 
-            background-color: #0a0505; 
+            background-color: #050505; /* Black fallback */
             color: #f4f4f5; 
             overflow-x: hidden;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif; /* Global font fallback */
         }
 
-        /* --- Rose Gold Silk Background (Inlined SVG Filter) --- */
-        .silk-container {
+        /* Canvas Container for Three.js Background */
+        #webgl-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -10;
-            /* Base Gradient: Deep Midnight Purple/Burgundy to support Rose Gold */
-            background: linear-gradient(135deg, #0a0505, #1a0a10, #0f0c1a);
-            overflow: hidden;
+            /* Fallback gradient if WebGL fails - Updated to match new vibe */
+            background: linear-gradient(135deg, #050505, #1a0b2e, #0f172a); 
         }
 
-        /* The Silk Layer */
-        .silk-layer {
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            /* Rose Gold Sheen Gradient */
-            background: repeating-linear-gradient(
-                45deg,
-                rgba(183, 110, 121, 0) 0%,       /* Transparent */
-                rgba(212, 175, 55, 0.05) 25%,    /* Subtle Gold */
-                rgba(183, 110, 121, 0.08) 35%,   /* Rose Tone */
-                rgba(183, 110, 121, 0) 50%
-            );
-            /* Apply the filter defined in SVG below */
-            filter: url('#silk-distortion');
-            opacity: 0.7;
-            /* Auto-animation */
-            animation: silkDrift 40s infinite linear;
-            transform-origin: center;
-            will-change: transform;
-        }
-
-        @keyframes silkDrift {
-            0% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(2deg) scale(1.05); }
-            100% { transform: rotate(0deg) scale(1); }
-        }
-
-        /* Overlay to ensure text pops */
+        /* Overlay to ensure text readability against the dynamic background */
         .readability-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to bottom, rgba(10,5,5,0.9) 0%, rgba(10,5,5,0.7) 50%, rgba(10,5,5,0.95) 100%);
+            /* Modified Gradient: More transparent to let the bright colors shine through */
+            background: radial-gradient(circle at center, rgba(5,5,5,0.4) 0%, rgba(5,5,5,0.85) 100%);
             z-index: -5;
             pointer-events: none;
         }
 
         .glass-nav {
-            background: rgba(10, 5, 5, 0.9);
+            background: rgba(5, 5, 5, 0.9);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        /* Styles */
+        /* Styles preserved from previous iterations */
         .hr-highlight {
             position: relative;
             cursor: pointer;
@@ -157,7 +124,6 @@
             cursor: pointer;
             border-bottom: 1px solid rgba(255,255,255,0.1); 
             transition: all 0.3s ease;
-            overflow: hidden;
         }
 
         .skill-item-container:hover {
@@ -185,21 +151,21 @@
 
         .skill-spectrum-bar {
             position: absolute;
-            bottom: 0; /* Align to bottom border */
+            bottom: -1px;
             left: 0;
             height: 2px;
             width: 0%; 
-            /* Rose Gold Gradient for the bar */
-            background: linear-gradient(90deg, #fff, #b76e79, transparent);
-            box-shadow: 0 0 10px rgba(183, 110, 121, 0.5);
+            background: linear-gradient(90deg, #fff, #a1a1aa, transparent);
+            box-shadow: 0 0 10px rgba(255,255,255,0.8);
             transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
             z-index: 10;
         }
 
         .skill-item-container:hover .skill-spectrum-bar {
-            width: var(--skill-width, 100%) !important; 
+            width: var(--skill-width, 100%); 
         }
 
+        /* Experience Card */
         .experience-card {
             transition: all 0.4s ease;
             border-left: 2px solid transparent;
@@ -228,6 +194,7 @@
             transform: scale(1.2);
         }
 
+        /* Social Icon */
         .social-icon-link {
             transition: all 0.3s ease;
             position: relative;
@@ -267,6 +234,7 @@
             opacity: 1;
         }
         
+        /* Clean Brand Logo Style */
         .brand-logo {
             font-family: 'Cinzel', serif;
             font-weight: 600;
@@ -294,22 +262,8 @@
 </head>
 <body class="antialiased selection:bg-white selection:text-black">
 
-    <!-- 
-      INLINED SVG FILTERS (Crucial for the silk effect)
-      Placed here to ensure it loads with the document.
-    -->
-    <svg style="position: absolute; width: 0; height: 0;">
-        <filter id="silk-distortion">
-            <!-- Increased baseFrequency creates more "ripples" -->
-            <feTurbulence type="fractalNoise" baseFrequency="0.006" numOctaves="3" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="60" />
-        </filter>
-    </svg>
-
-    <!-- Silk Background Layers -->
-    <div class="silk-container">
-        <div class="silk-layer" id="silk-layer"></div>
-    </div>
+    <!-- Three.js Background Container -->
+    <div id="webgl-container"></div>
     <div class="readability-overlay"></div>
 
     <!-- Navigation -->
@@ -736,39 +690,167 @@
         </p>
     </footer>
 
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
     <script>
+        // --- WebGL Intense Flow Background (Inspiration: Aurora/Cosmic) ---
+        
+        // 1. CONFIGURATION: Tweak these to change the vibe instantly
+        const config = {
+            // Preset A: "Aurora" (High visibility, Intellectual, Deep)
+            colorHigh: new THREE.Color("#00FFFF"), // Electric Cyan
+            colorLow: new THREE.Color("#4B0082"),  // Indigo/Deep Purple
+            
+            // Try swapping with Preset C ("Sunset") if you prefer warm colors:
+            // colorHigh: new THREE.Color("#ff00cc"), // Magenta
+            // colorLow: new THREE.Color("#ff9900"),  // Orange
+
+            flowSpeed: 0.15,        // [MODIFIED] Slowed down significantly for "idle" state
+            scrollInfluence: 8.0,   // [MODIFIED] Increased significantly to make scroll the main driver
+            intensity: 1.8,         // [MODIFIED] Slightly higher intensity for better visibility at slow speeds
+            opacity: 0.7,           // Visibility (0.0 to 1.0)
+            meshSegments: window.innerWidth < 768 ? 64 : 128
+        };
+
+        let scene, camera, renderer, silkMesh;
+        let uniforms;
+        const container = document.getElementById('webgl-container');
+        
+        let scrollTarget = 0;
+        let scrollCurrent = 0;
+
+        function initWebGL() {
+            // Scene Setup
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 1; 
+
+            // Renderer Setup
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+
+            // Geometry
+            const geometry = new THREE.PlaneGeometry(3, 3, config.meshSegments, config.meshSegments);
+
+            // Shaders
+            uniforms = {
+                uTime: { value: 0.0 },
+                uScrollOffset: { value: 0.0 },
+                uColorHigh: { value: config.colorHigh },
+                uColorLow: { value: config.colorLow },
+                uIntensity: { value: config.intensity },
+                uOpacity: { value: config.opacity },
+                uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+            };
+
+            const vertexShader = `
+                uniform float uTime;
+                uniform float uScrollOffset;
+                uniform float uIntensity;
+                varying vec2 vUv;
+                varying float vElevation;
+
+                void main() {
+                    vUv = uv;
+                    vec3 newPosition = position;
+                    float timeScale = uTime + uScrollOffset;
+                    
+                    // More complex wave pattern for "Intense" look
+                    float elevation = sin(newPosition.x * 4.0 + timeScale) * 0.2 * uIntensity;
+                    elevation += sin(newPosition.y * 3.0 + timeScale * 0.5) * 0.2 * uIntensity;
+                    elevation += sin((newPosition.x + newPosition.y) * 6.0 + timeScale * 0.8) * 0.05;
+                    
+                    // Add some "noise" movement
+                    elevation += cos(newPosition.x * 10.0 + timeScale * 2.0) * 0.02;
+
+                    newPosition.z += elevation;
+                    vElevation = elevation;
+
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+                }
+            `;
+
+            const fragmentShader = `
+                uniform vec3 uColorHigh;
+                uniform vec3 uColorLow;
+                uniform float uOpacity;
+                varying vec2 vUv;
+                varying float vElevation;
+
+                void main() {
+                    // Dramatic mixing based on elevation
+                    float mixStrength = (vElevation + 0.5) * 1.5;
+                    mixStrength = smoothstep(0.0, 1.0, mixStrength);
+                    
+                    vec3 finalColor = mix(uColorLow, uColorHigh, mixStrength);
+                    
+                    // Add a subtle "glow" bloom effect artificially
+                    float glow = smoothstep(0.4, 0.6, mixStrength) * 0.2;
+                    finalColor += vec3(glow);
+
+                    // Vignette to keep focus center
+                    float dist = distance(vUv, vec2(0.5));
+                    float alpha = uOpacity * (1.0 - dist * 0.5);
+
+                    gl_FragColor = vec4(finalColor, alpha); 
+                }
+            `;
+
+            const material = new THREE.ShaderMaterial({
+                uniforms: uniforms,
+                vertexShader: vertexShader,
+                fragmentShader: fragmentShader,
+                wireframe: false,
+                transparent: true,
+                depthWrite: false, // Helps with transparency blending
+                blending: THREE.AdditiveBlending // Makes colors pop against black
+            });
+
+            silkMesh = new THREE.Mesh(geometry, material);
+            silkMesh.rotation.x = -0.3; // Tilted slightly more for depth
+            scene.add(silkMesh);
+
+            // Listeners
+            window.addEventListener('resize', onWindowResize);
+            window.addEventListener('scroll', onScroll);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
+        }
+
+        function onScroll() {
+             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+             const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+             const scrollPercent = scrollHeight > 0 ? scrollTop / scrollHeight : 0;
+             scrollTarget = scrollPercent * config.scrollInfluence;
+        }
+
+        function animateWebGL() {
+            requestAnimationFrame(animateWebGL);
+            uniforms.uTime.value += config.flowSpeed * 0.01;
+            scrollCurrent += (scrollTarget - scrollCurrent) * 0.05;
+            uniforms.uScrollOffset.value = scrollCurrent;
+            renderer.render(scene, camera);
+        }
+
+        // Initialize WebGL
+        if (document.getElementById('webgl-container')) {
+            initWebGL();
+            animateWebGL();
+        }
+
+        // --- Other Scripts ---
         // Initialize Icons
-        lucide.createIcons();
-
-        // Navbar Scroll Effect
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('glass-nav');
-                navbar.classList.remove('py-6');
-                navbar.classList.add('py-4');
-            } else {
-                navbar.classList.remove('glass-nav');
-                navbar.classList.remove('py-4');
-                navbar.classList.add('py-6');
-            }
-        });
-
-        // Scroll-Driven Silk Animation (The key interaction)
-        window.addEventListener('scroll', () => {
-            const silkLayer = document.querySelector('.silk-layer');
-            const scrolled = window.scrollY;
-            
-            // Subtle rotation and translation based on scroll position
-            // This creates the "flowing" effect as the user pulls down
-            const rotation = scrolled * 0.02; 
-            const translationY = scrolled * 0.1;
-            
-            // Apply transformation
-            if(silkLayer) {
-                silkLayer.style.transform = `rotate(${rotation}deg) translateY(${translationY}px)`;
-            }
-        });
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
 
         // Mobile Menu Logic
         function toggleMobileMenu() {
